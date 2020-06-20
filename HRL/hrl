@@ -1,0 +1,340 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.6931471805599453\n",
+      "1.5 -1.7095112913514545 0.6931471805599453\n",
+      "2.5 -4.099332334081794 3.7561802245911946\n",
+      "3.5 -8.589219554709336 10.760256186416132\n",
+      "4.5 -16.66854000312397 25.070774255959886\n",
+      "5.5 -30.736418300447937 52.397850459930844\n",
+      "6.5 -54.607700803532964 102.21481323964377\n",
+      "7.5 -94.27674504534939 189.95849835876746\n",
+      "8.5 -159.06433968204746 340.40821117242695\n",
+      "return number too small\n",
+      "Ecxeption\n",
+      "))\n"
+     ]
+    }
+   ],
+   "source": [
+    "import matplotlib.pyplot as plt \n",
+    "import math\n",
+    "import numpy as np\n",
+    "\n",
+    "MIN_HALF_LIFE = 15.0 / (24 * 60)    # 15 minutes\n",
+    "MAX_HALF_LIFE = 274.                # 9 months\n",
+    "\n",
+    "\n",
+    "def getXi(a,b):\n",
+    "    try:\n",
+    "        res = math.log((a/0.5)**(b))\n",
+    "        return res\n",
+    "    except Exception as e:\n",
+    "        res = MAX_HALF_LIFE\n",
+    "        p = math.e ** (-x/math.log((1/a)))\n",
+    "        print(\"return number too small\")\n",
+    "        return pclip(p)    \n",
+    "        \n",
+    "def pclip(p):\n",
+    "    # bound min/max model predictions (helps with loss optimization)\n",
+    "    return min(max(p, 0.0001), .9999)           \n",
+    "\n",
+    "def countA(a1):\n",
+    "    return a1 + 0.5\n",
+    "\n",
+    "def getB(x, a1):\n",
+    "    #return xi/math.log(1/ai1)\n",
+    "    res = x/math.log((1/a1))\n",
+    "    return res\n",
+    "    \n",
+    "    \n",
+    "def maxX(x0, x1):\n",
+    "    try:\n",
+    "        return max(x0,x1)\n",
+    "    except Exception as e:\n",
+    "        print(\"Ecxeption\")\n",
+    "\n",
+    "def countL(x, a, b):\n",
+    "    #res = (math.e**(b*x))\n",
+    "     res = 0.5**2 + 0.001*(-x/math.log(1/a) - math.e)   \n",
+    "        \n",
+    "        \n",
+    "        \n",
+    "if __name__ == \"__main__\":\n",
+    "    CHRCK_N = True\n",
+    "    a0= int(1)\n",
+    "    a1 = int(1.2)\n",
+    "    #x0 - t = 0\n",
+    "    x0 = int(0)\n",
+    "    x1 = getXi(1,1)\n",
+    "    a0 = 1/x1;\n",
+    "    \n",
+    "    print(x1)\n",
+    "    Xval = []\n",
+    "    y = np.array([])\n",
+    "    x = np.array([])\n",
+    "    \n",
+    "   \n",
+    "    try:\n",
+    "         while(abs(x1) < 1000): \n",
+    "            if(CHRCK_N == True):\n",
+    "                #count alfa i+1 & betta[i+1] for the next function a[i+1]e^(-b[i+1]x)\n",
+    "                a0 = a1\n",
+    "                a1 = countA(a1)\n",
+    "                b1 = getB(x1, a1)\n",
+    "                #count x[i+1]\n",
+    "                x0 = x1\n",
+    "                x1 = getXi(a1, b1)\n",
+    "                res = maxX(x0, x1)\n",
+    "                if(b1 < 0):\n",
+    "                    x = np.append(x, res)\n",
+    "                    y = np.append(y, 1)\n",
+    "                    print(a1, b1, res)\n",
+    "                #print(\"tng = \", (abs(a1 - 1)/abs(x1)))\n",
+    "            else: \n",
+    "                break    \n",
+    "    except Exception as e:\n",
+    "        CHRCK_N = False\n",
+    "        print(\"Ecxeption\")\n",
+    "                \n",
+    "    print (\"))\")     "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 216,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "[] []\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(x, y)   "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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\n",
+      "text/plain": [
+       "<Figure size 432x288 with 1 Axes>"
+      ]
+     },
+     "metadata": {
+      "needs_background": "light"
+     },
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "plt.plot(x, y, 'ro')\n",
+    "\n",
+    "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "1    10мин\n",
+      "2    55мин\n",
+      "3    2ч 36мин\n",
+      "4    6ч 2мин\n",
+      "5    12ч 36мин\n",
+      "6    1д 0ч 35мин\n",
+      "7    1д 21ч 41мин\n"
+     ]
+    }
+   ],
+   "source": [
+    "time = []\n",
+    "delta = x[0]\n",
+    "dTime = 10\n",
+    "\n",
+    "for i in range(len(x)-1):\n",
+    "    #if(i%2 == 0):\n",
+    "        if(x[i]/delta*dTime >= 60):\n",
+    "            h =math.ceil((x[i]/delta*dTime)//60)\n",
+    "            m =math.ceil((x[i]/delta*dTime) % 60)\n",
+    "            if(h//24>=1):\n",
+    "                    d = h//24\n",
+    "                    h = h%24\n",
+    "                    time.append(f\"{d}д {h}ч {m}мин\" )\n",
+    "            else:    \n",
+    "                    time.append(f\"{h}ч {m}мин\" )\n",
+    "                    #print (x[i]/delta*20)\n",
+    "        else:\n",
+    "            time.append(str(math.ceil(x[i]/delta*dTime))+\"мин\")\n",
+    "            #print (x[i]/delta*20)\n",
+    "\n",
+    "for i in range(len(time)):\n",
+    "    print(i+1 , \"  \",time[i])        "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "###############################################################################################################################"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 206,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "15\n"
+     ]
+    }
+   ],
+   "source": [
+    "s = [1, 2, 3, 4, 5]\n",
+    "print(sum(s))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "0.6931471805599453\n",
+      "return number too small\n",
+      "Ecxeption\n",
+      "Ecxeption\n",
+      "))\n"
+     ]
+    }
+   ],
+   "source": [
+    "import matplotlib.pyplot as plt \n",
+    "import math\n",
+    "import numpy as np\n",
+    "\n",
+    "\n",
+    "def getXi(a,b):\n",
+    "    try:\n",
+    "        return math.log((a/0.5)**(b))\n",
+    "    except Exception as e:\n",
+    "        #CHECK_N = False\n",
+    "        print(\"return number too small\")\n",
+    "        \n",
+    "            \n",
+    "\n",
+    "def countA(a1):\n",
+    "    return a1 + 0.5\n",
+    "\n",
+    "def getB(x, a1):\n",
+    "    #return xi/math.log(1/ai1)\n",
+    "    res = x/math.log((1/a1))\n",
+    "    return res\n",
+    "    \n",
+    "    \n",
+    "def maxX(x0, x1):\n",
+    "    try:\n",
+    "        return max(x0,x1)\n",
+    "    except Exception as e:\n",
+    "        print(\"Ecxeption\")\n",
+    "\n",
+    "\n",
+    "if __name__ == \"__main__\":\n",
+    "    CHRCK_N = True\n",
+    "    a0= int(1)\n",
+    "    a1 = int(1.2)\n",
+    "    #x0 - t = 0\n",
+    "    x0 = int(0)\n",
+    "    x1 = getXi(1,1)\n",
+    "    a0 = 1/x1;\n",
+    "    \n",
+    "    print(x1)\n",
+    "    Xval = []\n",
+    "    y = np.array([])\n",
+    "    x = np.array([])\n",
+    "    \n",
+    "   \n",
+    "    try:\n",
+    "         while(abs(x1) < 1000): \n",
+    "            if(CHRCK_N == True):\n",
+    "                #count alfa i+1 & betta[i+1] for the next function a[i+1]e^(-b[i+1]x)\n",
+    "                a0 = a1\n",
+    "                a1 = countA(a1)\n",
+    "\n",
+    "                b1 = getB(x1, a1)\n",
+    "                #count x[i+1]\n",
+    "                x0 = x1\n",
+    "                x1 = getXi(a1, b1)\n",
+    "                res = maxX(x0, x1)\n",
+    "                x = np.append(x, res)\n",
+    "                y = np.append(y, 1)\n",
+    "                #print(n, a1, b1, x1)\n",
+    "                #print(\"tng = \", (abs(a1 - 1)/abs(x1)))\n",
+    "            else: \n",
+    "                break    \n",
+    "    except Exception as e:\n",
+    "        CHRCK_N = False\n",
+    "        print(\"Ecxeption\")\n",
+    "                \n",
+    "    print (\"))\")     "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
